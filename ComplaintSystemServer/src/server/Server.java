@@ -15,12 +15,14 @@ import models.QueryModel;
 import java.io.*;
 
 public class Server {
+	private static final int PORT = 8888;
+	
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(8888);
+        ServerSocket serverSocket = new ServerSocket(PORT);
         try {
         	while (true) {
+        		System.out.println("Server listening on port " + PORT + "...");
         		Socket clientSocket = serverSocket.accept();
-        		
         		// spawn a new thread to handle the client request
         		ClientHandler handler = new ClientHandler(clientSocket);
         		new Thread(handler).start();
