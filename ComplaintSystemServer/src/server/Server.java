@@ -47,13 +47,6 @@ public class Server {
                 ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream());
                 ObjectOutputStream output = new ObjectOutputStream(clientSocket.getOutputStream());
 
-                // authenticate
-//                boolean authenticated = authenticate(input, output);
-//                if (!authenticated) {
-//                	System.err.println("Auth failed.");
-//                    clientSocket.close();
-//                    return;
-//                }
                 // read action from client
                 String action = "";
 				try {
@@ -85,8 +78,7 @@ public class Server {
 	                        break; 
 	                    case "findComplaint":
 	                    	int cID2 = Integer.parseInt((String) input.readObject());
-	                    	Complaint complaint3 = new Complaint().findComplaint(cID2);
-	                    	output.writeObject(complaint3);
+	                    	output.writeObject(new Complaint().findComplaint(cID2));
 	                    	break;
 	                    case "deleteComplaint":
 	                    	Complaint complaint2 = new Complaint();
