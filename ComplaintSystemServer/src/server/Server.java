@@ -80,6 +80,13 @@ public class Server {
 	                    	int cID2 = Integer.parseInt((String) input.readObject());
 	                    	output.writeObject(new Complaint().findComplaint(cID2));
 	                    	break;
+	                    case "respondComplaint":
+	                    	int complaintID = Integer.parseInt((String) input.readObject());
+	                    	int responderID = Integer.parseInt((String) input.readObject());
+	                    	String response = (String) input.readObject();
+	                    	new Complaint().respondComplaint(complaintID, responderID, response);
+	                    	output.writeObject(true);
+	                    	break;
 	                    case "deleteComplaint":
 	                    	Complaint complaint2 = new Complaint();
 	                    	int cID = Integer.parseInt((String) input.readObject());
@@ -99,6 +106,13 @@ public class Server {
 	                    	int qID = Integer.parseInt((String) input.readObject());
 	                    	Query query2 = new Query().findQuery(qID);
 	                    	output.writeObject(query2);
+	                    	break;
+	                    case "respondQuery":
+	                    	int queryID = Integer.parseInt((String) input.readObject());
+	                    	int responderID1 = Integer.parseInt((String) input.readObject());
+	                    	String response1 = (String) input.readObject();
+	                    	new Query().respondQuery(queryID, responderID1, response1);
+	                    	output.writeObject(true);
 	                    	break;
 	                    case "deleteQuery":
 	                    	Query query3 = new Query();

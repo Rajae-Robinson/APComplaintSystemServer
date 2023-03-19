@@ -79,6 +79,32 @@ public class Query implements Serializable {
 	        }
 	    }
     }
+	
+	public void respondQuery(int cqueryID, int responserID, String response) {
+		Session session = null;
+		try {
+			session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			// Use query ID to find complaint
+			Query query = session.get(Query.class, queryID);
+
+			// Insert to query table the following properties: responseDate, responseID, response
+			query.setResponseDate(new Date());
+			query.setResponderID(responserID);
+			query.setResponse(response);
+			
+			session.getTransaction().commit();
+	    } catch (Exception e) {
+	        if (session.getTransaction() != null) {
+	        	session.getTransaction().rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
+	}
 
     public List<Query> readAll() throws HibernateException {
     	Session session = null;

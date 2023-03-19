@@ -51,12 +51,14 @@ public class Complaint implements Serializable {
 		this.details = "'My grades are missing for Math.";
 	}
     
-    public Complaint(int complaintID, int studentID, String category, String details) {
+	public Complaint(int complaintID, int studentID, String category, String details) {
 		this.complaintID = complaintID;
 		this.studentID = studentID;
 		this.category = category;
 		this.details = details;
 	}
+
+
 
 	public void createComplaint() {
 		Session session = null;
@@ -76,6 +78,32 @@ public class Complaint implements Serializable {
 	        }
 	    }
     }
+	
+	public void respondComplaint(int complaintID, int responserID, String response) {
+		Session session = null;
+		try {
+			session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+			session.beginTransaction();
+			// Use complaint ID to find complaint
+			Complaint complaint = session.get(Complaint.class, complaintID);
+
+			// Insert to complaint table the following properties: responseDate, responseID, response
+			complaint.setResponseDate(new Date());
+			complaint.setResponderID(responserID);
+			complaint.setResponse(response);
+			
+			session.getTransaction().commit();
+	    } catch (Exception e) {
+	        if (session.getTransaction() != null) {
+	        	session.getTransaction().rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
+	}
 	
 	public Complaint findComplaint(int complaintID) {
     	Session session = null;
