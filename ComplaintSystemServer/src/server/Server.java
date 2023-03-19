@@ -2,15 +2,10 @@ package server;
 
 import java.net.*;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-
-import factories.SessionFactoryBuilder;
-import models.Complaint;
-import models.Login;
-import models.Student;
-import models.QueryModel;
+import model.Complaint;
+import model.Login;
+import model.Query;
+import model.Student;
 
 import java.io.*;
 
@@ -53,20 +48,27 @@ public class Server {
                 ObjectOutputStream output = new ObjectOutputStream(clientSocket.getOutputStream());
 
                 // authenticate
-                boolean authenticated = authenticate(input);
-                if (!authenticated) {
-                    output.write("Authentication failed".getBytes());
-                    clientSocket.close();
-                    return;
-                }
+//                boolean authenticated = authenticate(input, output);
+//                if (!authenticated) {
+//                	System.err.println("Auth failed.");
+//                    clientSocket.close();
+//                    return;
+//                }
                 // read action from client
-                byte[] buffer = new byte[1024];
-                int bytesRead = input.read(buffer);
-                String action = new String(buffer, 0, bytesRead);
+                String action = "";
+				try {
+					action = (String) input.readObject();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 
                 // handle action with switch statement
                 try { 
 	                switch (action) {
+	                	case "authenticate":
+	                		Login.authenticate(input, output);
+	                		break;
+	                		
 	                	// Students
 	                    case "getStudents":
 	                        output.writeObject(new Student().readAll());
@@ -75,23 +77,42 @@ public class Server {
 	                    // Complaints
 	                    case "getComplaints":
 	                        output.writeObject(new Complaint().readAll());
-	                        break;
-	                        
+	                        break;          
 	                    case "createComplaint":
 	                    	Complaint complaint = (Complaint) input.readObject();
 	                    	complaint.createComplaint();
 	                        output.writeObject(true);
-	                        break;
+	                        break; 
+	                    case "findComplaint":
+	                    	int cID2 = Integer.parseInt((String) input.readObject());
+	                    	Complaint complaint3 = new Complaint().findComplaint(cID2);
+	                    	output.writeObject(complaint3);
+	                    	break;
+	                    case "deleteComplaint":
+	                    	Complaint complaint2 = new Complaint();
+	                    	int cID = Integer.parseInt((String) input.readObject());
+	                    	complaint2.deleteComplaint(cID);
+	                        output.writeObject(true);
 	                        
 	                    // Queries
 	                    case "getQueries":
-	                    	output.writeObject(new Complaint().readAll());
+	                    	output.writeObject(new Query().readAll());
 	                        break;
 	                    case "createQuery":
-	                    	QueryModel query = (QueryModel) input.readObject();
+	                    	Query query = (Query) input.readObject();
 	                    	query.createQuery();
 	                        output.writeObject(true);
 	                        break;
+	                    case "findQuery":
+	                    	int qID = Integer.parseInt((String) input.readObject());
+	                    	Query query2 = new Query().findQuery(qID);
+	                    	output.writeObject(query2);
+	                    	break;
+	                    case "deleteQuery":
+	                    	Query query3 = new Query();
+	                    	int qID2 = Integer.parseInt((String) input.readObject());
+	                    	query3.deleteQuery(qID2);
+	                        output.writeObject(true);
 	                    default:
 	                        output.writeObject("Unknown action: " + action);
 	                }
@@ -106,31 +127,5 @@ public class Server {
             }
         }
     }
-    
-    private static boolean authenticate(InputStream input) throws IOException {
-    	byte[] buffer = new byte[1024];
-        int bytesRead = input.read(buffer);
-        String id = new String(buffer, 0, bytesRead).trim();
-
-        bytesRead = input.read(buffer);
-        String password = new String(buffer, 0, bytesRead).trim();
-        
-	    Session session = null;
-	    try {
-	        session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
-	        session.beginTransaction();
-	        Query<Login> query = session.createQuery("from Login where id = :id and password = :password", Login.class);
-	        query.setParameter("id", id);
-	        query.setParameter("password", password);
-	        Login login = query.uniqueResult();
-	        session.getTransaction().commit();
-	        return login != null;
-	    } catch (HibernateException e) {
-	        if (session != null && session.getTransaction() != null) {
-	            session.getTransaction().rollback();
-	        }
-	        throw e;
-	    }
-	}
 }
 

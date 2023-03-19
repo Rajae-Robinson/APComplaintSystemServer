@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ import factories.SessionFactoryBuilder;
 @Entity
 @Table(name = "students")
 public class Student implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "studentID")

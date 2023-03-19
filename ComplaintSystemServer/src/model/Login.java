@@ -1,5 +1,8 @@
-package models;
+package model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -36,16 +39,28 @@ public class Login implements Serializable {
 		this.password = password;
 	}
 
-	public boolean authenticate() throws HibernateException {
+    public static boolean authenticate(ObjectInputStream input, ObjectOutputStream output) throws IOException {
+        int id = 0;
+        String password = "";
+		try {
+			id = Integer.parseInt((String) input.readObject());
+			password = (String) input.readObject();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+        
 	    Session session = null;
 	    try {
 	        session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
 	        session.beginTransaction();
 	        Query<Login> query = session.createQuery("from Login where id = :id and password = :password", Login.class);
-	        query.setParameter("id", this.id);
-	        query.setParameter("password", this.password);
+	        query.setParameter("id", id);
+	        query.setParameter("password", password);
 	        Login login = query.uniqueResult();
 	        session.getTransaction().commit();
+	        output.writeObject(login != null);
 	        return login != null;
 	    } catch (HibernateException e) {
 	        if (session != null && session.getTransaction() != null) {

@@ -5,10 +5,10 @@ import javax.persistence.PersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import models.Complaint;
-import models.Login;
-import models.QueryModel;
-import models.Student;
+import model.Complaint;
+import model.Login;
+import model.Query;
+import model.Student;
 
 public class SessionFactoryBuilder {
 	private static SessionFactory sf = null;
@@ -21,7 +21,7 @@ public class SessionFactoryBuilder {
 						.addAnnotatedClass(Login.class)
 						.addAnnotatedClass(Student.class)
 						.addAnnotatedClass(Complaint.class)
-						.addAnnotatedClass(QueryModel.class)
+						.addAnnotatedClass(Query.class)
 						.buildSessionFactory();
 			}
 			return sf;

@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,7 +19,9 @@ import factories.SessionFactoryBuilder;
 
 @Entity
 @Table(name = "query")
-public class QueryModel implements Serializable {
+public class Query implements Serializable {
+	private static final long serialVersionUID = 8485189943949795110L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "queryID")
@@ -44,14 +46,14 @@ public class QueryModel implements Serializable {
     private String response;
 
 	
-	public QueryModel() {
+	public Query() {
 		this.queryID = 1;
 		this.studentID = 1901709;
 		this.category = "How to drop a module?";
 		this.details = "I started a module late and I want to drop it.";
 	}
 	
-    public QueryModel(int queryID, int studentID, String category, String details) {
+    public Query(int queryID, int studentID, String category, String details) {
 		this.queryID = queryID;
 		this.studentID = studentID;
 		this.category = category;
@@ -78,14 +80,14 @@ public class QueryModel implements Serializable {
 	    }
     }
 
-    public List<QueryModel> readAll() throws HibernateException {
+    public List<Query> readAll() throws HibernateException {
     	Session session = null;
-		List<QueryModel> queries = new ArrayList<>();
+		List<Query> queries = new ArrayList<>();
 		
 		try {
             session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
             session.beginTransaction();
-            queries = session.createQuery("from Query", QueryModel.class).getResultList();
+            queries = session.createQuery("from Query", Query.class).getResultList();
             session.getTransaction().commit();
         } catch (HibernateException e) {
             if (session != null && session.getTransaction() != null) {
@@ -97,15 +99,15 @@ public class QueryModel implements Serializable {
 		return queries;
 	}
     
-    public QueryModel findQuery(int queryID) {
+    public Query findQuery(int queryID) {
     	Session session = null;
-        QueryModel query = null;
+        Query query = null;
 
         try {
         	session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
             session.beginTransaction();
 
-            query = session.get(QueryModel.class, queryID);
+            query = session.get(Query.class, queryID);
 
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -129,7 +131,7 @@ public class QueryModel implements Serializable {
         	session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
             session.beginTransaction();
 
-            QueryModel query = session.get(QueryModel.class, queryID);
+            Query query = session.get(Query.class, queryID);
             session.delete(query);
 
             session.getTransaction().commit();

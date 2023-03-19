@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -20,6 +20,7 @@ import factories.SessionFactoryBuilder;
 @Entity
 @Table(name = "complaint")
 public class Complaint implements Serializable {
+	private static final long serialVersionUID = -8928497947145342486L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "complaintID")
@@ -74,6 +75,31 @@ public class Complaint implements Serializable {
 	            session.close();
 	        }
 	    }
+    }
+	
+	public Complaint findComplaint(int complaintID) {
+    	Session session = null;
+        Complaint complaint = null;
+
+        try {
+        	session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+
+            complaint = session.get(Complaint.class, complaintID);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        
+        return complaint;
     }
 
     public List<Complaint> readAll() throws HibernateException {
