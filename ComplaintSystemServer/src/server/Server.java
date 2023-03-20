@@ -2,10 +2,12 @@ package server;
 
 import java.net.*;
 
+import model.Advisor;
 import model.Complaint;
 import model.Login;
 import model.Query;
 import model.Student;
+import model.Supervisor;
 
 import java.io.*;
 
@@ -65,6 +67,16 @@ public class Server {
 	                	// Students
 	                    case "getStudents":
 	                        output.writeObject(new Student().readAll());
+	                        break;
+	                        
+	                    // Advisors
+	                    case "getAdvisors":
+	                        output.writeObject(new Advisor().readAll());
+	                        break;
+	                        
+	                    // Supervisors
+	                    case "getSupervisors":
+	                        output.writeObject(new Supervisor().readAll());
 	                        break;
 	                        
 	                    // Complaints
