@@ -1,3 +1,6 @@
+/**
+ * Author: Rajae Robinson
+ */
 package model;
 
 import java.util.Date;
