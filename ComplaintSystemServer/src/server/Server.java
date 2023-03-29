@@ -78,6 +78,11 @@ public class Server {
 	                        output.writeObject(new Student().readAll());
 	                        logger.info("Get students called");
 	                        break;
+	                    case "findStudent":
+	                    	int sID = Integer.parseInt((String) input.readObject());
+	                    	output.writeObject(new Student().findStudent(sID));
+	                    	logger.info("User searched for student with id: " + sID);
+	                    	break;
 	                        
 	                    // Advisors
 	                    case "getAdvisors":

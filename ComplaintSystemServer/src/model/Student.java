@@ -73,6 +73,31 @@ public class Student implements Serializable {
         }
         return students;
     }
+    
+    public Student findStudent(int studentID) {
+    	Session session = null;
+        Student student = null;
+
+        try {
+        	session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+
+            student = session.get(Student.class, studentID);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        
+        return student;
+    }
 
 	public int getStudentID() {
 		return studentID;
