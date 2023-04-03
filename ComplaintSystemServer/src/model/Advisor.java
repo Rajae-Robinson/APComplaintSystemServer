@@ -22,6 +22,8 @@ import factories.SessionFactoryBuilder;
 @Entity
 @Table(name = "advisor")
 public class Advisor implements Serializable {
+	private static final long serialVersionUID = 3755315976869196098L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "advisorID")
