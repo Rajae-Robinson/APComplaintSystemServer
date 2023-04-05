@@ -103,6 +103,12 @@ public class Server {
 	                        logger.info("Get complaints called");
 	                        break;
 	                        
+	                    case "getComplaintsForStudent":
+	                    	int advID4 = (int) input.readObject();
+	                    	output.writeObject(new Complaint().complaintsForStudent(advID4));
+	                        logger.info("Get complaints for student called");
+	                        break;
+	                        
 	                    case "getComplaintsForAdvisor":
 	                    	int advID = (int) input.readObject();
 	                    	output.writeObject(new Complaint().complaintsForAdvisor(advID));
@@ -157,6 +163,12 @@ public class Server {
 	                    // Queries
 	                    case "getQueries":
 	                    	output.writeObject(new Query().readAll());
+	                        break;
+	                        
+	                    case "getQueriesForStudent":
+	                    	int advID3 = (int) input.readObject();
+	                    	output.writeObject(new Query().queriesForStudent(advID3));
+	                        logger.info("Get queries for student called");
 	                        break;
 	                        
 	                    case "getQueriesForAdvisor":
