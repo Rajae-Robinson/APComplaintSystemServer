@@ -101,7 +101,13 @@ public class Server {
 	                    case "getComplaints":
 	                        output.writeObject(new Complaint().readAll());
 	                        logger.info("Get complaints called");
-	                        break; 
+	                        break;
+	                        
+	                    case "getComplaintsForAdvisor":
+	                    	int advID = (int) input.readObject();
+	                    	output.writeObject(new Complaint().complaintsForAdvisor(advID));
+	                        logger.info("Get complaints for advisor called");
+	                        break;
 	                        
 	                    case "getOutstandingComplaintsList":
 	                    	output.writeObject(DatabaseConnection.fetchOutstandingComplaintsList());
@@ -151,6 +157,12 @@ public class Server {
 	                    // Queries
 	                    case "getQueries":
 	                    	output.writeObject(new Query().readAll());
+	                        break;
+	                        
+	                    case "getQueriesForAdvisor":
+	                    	int advID2 = (int) input.readObject();
+	                    	output.writeObject(new Query().queriesForAdvisor(advID2));
+	                        logger.info("Get queries for advisor called");
 	                        break;
 	                        
 	                    case "getOutstandingQueriesList":

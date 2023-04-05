@@ -152,6 +152,28 @@ public class Complaint implements Serializable {
 		return complaints;
 	}
     
+    public List<Complaint> complaintsForAdvisor(int id) throws HibernateException {
+        Session session = null;
+        List<Complaint> complaints = new ArrayList<>();
+        
+        try {
+            session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            String hql = "FROM Complaint WHERE responderID = :id";
+            complaints = session.createQuery(hql, Complaint.class)
+                            .setParameter("id", id)
+                            .getResultList();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session != null && session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+            throw e;
+        }
+        
+        return complaints;
+    }
+    
     public void deleteComplaint(int complaintID) {
     	Session session = null;
 

@@ -128,6 +128,29 @@ public class Query implements Serializable {
 		return queries;
 	}
     
+    public List<Query> queriesForAdvisor(int id) throws HibernateException {
+        Session session = null;
+        List<Query> queries = new ArrayList<>();
+        
+        try {
+            session = SessionFactoryBuilder.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            String hql = "FROM Query WHERE responderID = :id";
+            queries = session.createQuery(hql, Query.class)
+                            .setParameter("id", id)
+                            .getResultList();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (session != null && session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+            throw e;
+        }
+        
+        return queries;
+    }
+
+    
     public Query findQuery(int queryID) {
     	Session session = null;
         Query query = null;
