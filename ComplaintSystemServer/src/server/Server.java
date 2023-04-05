@@ -135,12 +135,10 @@ public class Server {
 	                    	break;
 	                    	
 	                    case "respondComplaint":
-	                    	int complaintID2 = Integer.parseInt((String) input.readObject());
-	                    	int responderID = Integer.parseInt((String) input.readObject());
-	                    	String response = (String) input.readObject();
-	                    	new Complaint().respondComplaint(complaintID2, responderID, response);
+	                    	Complaint complaintResp = (Complaint) input.readObject();
+	                    	new Complaint().respondComplaint(complaintResp.getComplaintID(), complaintResp.getResponderID(), complaintResp.getResponse());
 	                    	output.writeObject(true);
-	                    	logger.info(responderID + "responded to complaint " + complaintID2);
+	                    	logger.info(complaintResp.getResponderID() + " responded to complaint " + complaintResp.getComplaintID());
 	                    	break;
 	                    	
 	                    case "deleteComplaint":
@@ -187,12 +185,10 @@ public class Server {
 	                    	break;
 	                    	
 	                    case "respondQuery":
-	                    	int queryID = Integer.parseInt((String) input.readObject());
-	                    	int responderID1 = Integer.parseInt((String) input.readObject());
-	                    	String response1 = (String) input.readObject();
-	                    	new Query().respondQuery(queryID, responderID1, response1);
+	                    	Query queryResp = (Query) input.readObject();
+	                    	new Query().respondQuery(queryResp.getQueryID(), queryResp.getResponderID(), queryResp.getResponse());
 	                    	output.writeObject(true);
-	                    	logger.info(responderID1 + "responded to query " + queryID);
+	                    	logger.info(queryResp.getResponderID() + " responded to query " + queryResp.getQueryID());
 	                    	break;
 	                    	
 	                    case "deleteQuery":
